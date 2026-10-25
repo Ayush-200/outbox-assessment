@@ -1,25 +1,36 @@
 {
-  "projects": [
-    {
-      "directory": "frontend",
-      "name": "reachinbox-dashboard",
-      "buildCommand": "npm run build",
-      "outputDirectory": "dist",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "services": {
+    "backend": {
+      "framework": "express",
+      "buildCommand": "cd backend && npx tsc --noEmit && echo BUILD_OK",
+      "functions": "backend/src/**/*.ts",
+      "port": 3001
+    },
+    "frontend": {
       "framework": "vite",
-      "environment": {
-        "VITE_API_URL": {
-          "value": "https://your-backend.vercel.app"
-        },
-        "VITE_GOOGLE_CLIENT_ID": {
-          "fromEnv": "VITE_GOOGLE_CLIENT_ID"
-        }
-      }
+      "buildCommand": "cd frontend && npm run build",
+      "functions": "frontend/dist/**",
+      "outputDirectory": "dist"
+    }
+  },
+  "bindings": [
+    {
+      "type": "redis",
+      "service": "backend",
+      "name": "REDIS_URL"
     },
     {
-      "directory": "backend",
-      "name": "reachinbox-api",
-      "buildCommand": "npx tsc --noEmit",
-      "port": 3001
+      "type": "postgresql",
+      "service": "backend", 
+      "name": "DATABASE_URL"
+    },
+    {
+      "type": "elasticsearch",
+      "service": "backend",
+      "name": "ELASTICSEARCH_URL"
     }
-  ]
+  ],
+  "routes": []
 }
