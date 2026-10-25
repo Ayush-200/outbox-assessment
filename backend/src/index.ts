@@ -187,18 +187,24 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 async function main() {
   await initDb();
   await ensureIndex();
-  startWorker();
-}
-
-// Start server only when running locally (not on Vercel serverless)
-if (process.env.VERCEL !== '1') {
-  main().then(() => {
+  // On Vercel serverless, skip worker start (BullMQ needs a long-running process)
+  // In production, start a dedicated worker process separately
+  if (process.env.VERCEL !== '1') {
+    startWorker();
     app.listen(config.port, () => {
       console.log(`API + worker listening on http://localhost:${config.port}`);
       console.log(`Queue dashboard: http://localhost:${config.port}/admin/queues`);
     });
-  });
+  }
 }
+
+// Start server ( Vercel serverless or local)
+async function startServer() {
+  await main();
+}
+
+// Start server ( Vercel serverless or local)
+startServer();
 
 // Export app for Vercel serverless platforms
 export default app;
