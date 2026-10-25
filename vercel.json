@@ -1,0 +1,25 @@
+{
+  "projects": [
+    {
+      "directory": "frontend",
+      "name": "reachinbox-dashboard",
+      "buildCommand": "npm run build",
+      "outputDirectory": "dist",
+      "framework": "vite",
+      "environment": {
+        "VITE_API_URL": {
+          "value": "https://your-backend.vercel.app"
+        },
+        "VITE_GOOGLE_CLIENT_ID": {
+          "fromEnv": "VITE_GOOGLE_CLIENT_ID"
+        }
+      }
+    },
+    {
+      "directory": "backend",
+      "name": "reachinbox-api",
+      "buildCommand": "npx tsc --noEmit",
+      "port": 3001
+    }
+  ]
+}
